@@ -25,11 +25,12 @@ class Animal():
         #     f"WHERE type.id = {self.id_type}")
         # MyResult = ExecuteQuery(MyConnection, MyQuery)
         # self.type = ""
-        # for MyType in Var.Types:
+        # for MyType in Var.types:
         #     if MyType.id == self.id_type:
         #         self.type = MyType.name 
+
         self.type = [
             MyType.name
             for MyType
-            in Var.Types
-            if MyType.id == self.id_type][0]
+            in Var.types
+            if MyType.id == self.id_type]

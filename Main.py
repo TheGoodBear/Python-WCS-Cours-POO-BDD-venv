@@ -5,6 +5,7 @@ import psycopg2
 import Variables as Var
 from Models.Animal import Animal
 from Models.Type import Type
+from Models.contact import Contact
 
 
 def DBConnect():
@@ -18,7 +19,7 @@ def DBConnect():
             host="localhost",
             database="dojo_animal",
             user="postgres",
-            password="PG20"
+            password="Formation2020-at"
         )
     except(Exception, psycopg2.DatabaseError) as Error:
         # error
@@ -54,7 +55,8 @@ def CreateAnimalCollection(
         Create Animals collection from query result
     """
     if ResetCollection:
-        Var.Animals = []
+        Var.animals = []
+        print (f'\nliste animal vide : {Var.animals}') # ! to delete !!!!!
     
     # create Animals collection
     for MyAnimal in MyResult:
@@ -62,11 +64,12 @@ def CreateAnimalCollection(
         # add an new instance of animal to Animals (collection of animals)
         # this means each line in animal table (DB)
         #    equals one instance of animal class 
-        Var.Animals.append(
+        Var.animals.append(
             Animal(
                 MyAnimal[0], 
                 MyAnimal[1], 
                 MyAnimal[2]))
+    print (f'\nliste animal remplie : {Var.animals}') # ! to delete !!!!!
     
 def CreateTypeCollection(
     MyResult,
@@ -76,24 +79,49 @@ def CreateTypeCollection(
         and return collection
     """
     if ResetCollection:
-        Var.Types = []
+        Var.types = []
     
     # create Animals collection
     for MyType in MyResult:
-        Var.Types.append(
+        Var.types.append(
             Type(
                 MyType[0], 
                 MyType[1], 
                 MyType[2]))
+
+def create_collection(MyResult, liste_table, ResetCollection = True):
+    """
+            Create a collection from query result
+            and return collection
+        """
+    if ResetCollection:
+        liste_table = []
+        print(f'liste vide : {liste_table}')
+
+    print(f'my result : {MyResult}')
+
+    # create collection
+    for my_value in MyResult:
+        liste_table.append(
+            Contact(
+                my_value[0],
+                my_value[1]))
+    print(f'liste remplie : {liste_table}')
+
+    return liste_table
+
+
 
 def PrintAnimalCollection():
     """ 
         print Animals
     """    
     # print collection
+
     print(f"\n Liste des animaux :")
-    for MyAnimal in Var.Animals:
-        print(f"({MyAnimal.id}) {MyAnimal.name} - {MyAnimal.type} ({MyAnimal.id_type})")
+    for MyAnimal in Var.animals:
+        print(f'\ntype : {MyAnimal.type}')   #! to delete !!!!!!
+        print(f"\n({MyAnimal.id}) {MyAnimal.name} - {MyAnimal.type} ({MyAnimal.id_type})")
 
 def PrintTypeCollection():
     """
@@ -101,8 +129,19 @@ def PrintTypeCollection():
     """
     # print collection
     print(f"\n Liste des types d'animaux :")
-    for MyType in Var.Types:
+    for MyType in Var.types:
         print(f"({MyType.id}) {MyType.name} - {MyType.id_parent}")
+
+def print_collection(collection):
+    """
+        Print collection
+    """
+    # print collection
+    print(f'liste var.contacts : {collection}')
+    print(f"\ liste -- nom de la table -- ici contacts : ")
+    for my_value in Var.contacts:
+        for index in range(len(Var.contacts)):
+            print(f"({my_value[index][0]}) {my_value[index][1]}")
 
 
 def Main():
@@ -119,16 +158,16 @@ def Main():
     # # print query result
     # print(f"\n Résultat du test initial : {MyResult[0]}")
 
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM type")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # create Types collection
-    CreateTypeCollection(MyResult)
-    # print collection
-    PrintTypeCollection()
-
+    # # execute query
+    # MyQuery = (
+    #     "SELECT * " +
+    #     "FROM type")
+    # MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # # create Types collection
+    # CreateTypeCollection(MyResult)
+    # # print collection
+    # PrintTypeCollection()
+    #
     # execute query
     MyQuery = (
         "SELECT * " +
@@ -141,22 +180,14 @@ def Main():
     CreateAnimalCollection(MyResult)
     # print collection
     PrintAnimalCollection()
-    
-    # methods to get type name
-    # method 1 : use INNER JOIN
-    # MyQuery = (
-    #     "SELECT animal.id, animal.name, type.name " +
-    #     "FROM animal " +
-    #     "INNER JOIN type ON type.id = animal.id_type " +
-    #     "ORDER BY animal.name")
-    # MyResult = ExecuteQuery(MyConnection, MyQuery)
 
-    # method 2 : use additional query in animal
-    # see comments in Animal model
-
-    # method 3 : create and use collection of Types
-    # see model Type
-
+    # execute create and print collection
+    MyQuery = ( "SELECT * FROM contact" )
+    MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # create collection
+    collection = create_collection(MyResult, Var.contacts)
+    # print collection
+    print_collection(collection)
 
 
     # close resources
