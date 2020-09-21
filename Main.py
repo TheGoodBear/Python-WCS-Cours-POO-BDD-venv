@@ -5,7 +5,7 @@ import psycopg2
 import Variables as Var
 from Models.Animal import Animal
 from Models.Type import Type
-
+from Models.Country import Country
 
 def DBConnect():
     """
@@ -47,63 +47,35 @@ def ExecuteQuery(
 
     return MyResult
 
-def CreateAnimalCollection(
+def CreateCollection(
     MyResult,
+    ListTable,
+    NameTable,
     ResetCollection = True):
     """
-        Create Animals collection from query result
+        Create generic collection from query result
     """
     if ResetCollection:
-        Var.Animals = []
+        ListTable = []
     
-    # create Animals collection
-    for MyAnimal in MyResult:
-        # print(f"({Animal[0]}) {Animal[1]} - {Animal[2]}")
-        # add an new instance of animal to Animals (collection of animals)
+    # create Countries collection
+    for element in MyResult:
+        # print(f"({Country[0]}) {Country[1]}")
+        # add an new instance of animal to Countries (collection of Countries)
         # this means each line in animal table (DB)
-        #    equals one instance of animal class 
-        Var.Animals.append(
-            Animal(
-                MyAnimal[0], 
-                MyAnimal[1], 
-                MyAnimal[2]))
-    
-def CreateTypeCollection(
-    MyResult,
-    ResetCollection = True):
-    """
-        Create Types collection from query result
-        and return collection
-    """
-    if ResetCollection:
-        Var.Types = []
-    
-    # create Animals collection
-    for MyType in MyResult:
-        Var.Types.append(
-            Type(
-                MyType[0], 
-                MyType[1], 
-                MyType[2]))
+        #    equals one instance of Country class 
+        ListTable.append(
+            NameTable(element))
+    return ListTable
 
-def PrintAnimalCollection():
+def PrintCollection(MyCollection, ModelName):
     """ 
-        print Animals
+        print Collection
     """    
     # print collection
-    print(f"\n Liste des animaux :")
-    for MyAnimal in Var.Animals:
-        print(f"({MyAnimal.id}) {MyAnimal.name} - {MyAnimal.type} ({MyAnimal.id_type})")
-
-def PrintTypeCollection():
-    """
-        Print Types
-    """
-    # print collection
-    print(f"\n Liste des types d'animaux :")
-    for MyType in Var.Types:
-        print(f"({MyType.id}) {MyType.name} - {MyType.id_parent}")
-
+    print(f"\n Liste des {ModelName} :")
+    for MyElement in MyCollection:
+        print(MyElement)
 
 def Main():
     """
@@ -125,9 +97,12 @@ def Main():
         "FROM type")
     MyResult = ExecuteQuery(MyConnection, MyQuery)
     # create Types collection
-    CreateTypeCollection(MyResult)
+    Var.Types = CreateCollection(MyResult, Var.Types, Type)
+    # Get the type parents
+    for type in Var.Types:
+        type.get_parent()
     # print collection
-    PrintTypeCollection()
+    PrintCollection(Var.Types, "types d'animaux")
 
     # execute query
     MyQuery = (
@@ -138,10 +113,21 @@ def Main():
     # print query result
     # print(f"\n Résultat de la requête : {MyResult}")
     # create Animals collection
-    CreateAnimalCollection(MyResult)
+    Var.Animals = CreateCollection(MyResult, Var.Animals, Animal)
     # print collection
-    PrintAnimalCollection()
+    PrintCollection(Var.Animals, "animaux")
     
+    # execute query
+    MyQuery = (
+        "SELECT * " +
+        "FROM country")
+    MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # create Types collection
+    Var.Countries = CreateCollection(MyResult, Var.Countries, Country)
+    # print collection
+    PrintCollection(Var.Countries, "pays")
+
+
     # methods to get type name
     # method 1 : use INNER JOIN
     # MyQuery = (

@@ -8,15 +8,15 @@ class Animal():
     """
 
     def __init__(self,
-        ID, Name, IDType):
+        Properties):
         """
             Constructor
         """
 
         # native properties
-        self.id = ID
-        self.name = Name
-        self.id_type = IDType
+        self.id = Properties[0]
+        self.name = Properties[1]
+        self.id_type = Properties[2]
         
         # calculated properties
         # MyQuery = (
@@ -33,3 +33,10 @@ class Animal():
             for MyType
             in Var.Types
             if MyType.id == self.id_type][0]
+    
+    def __str__(self):
+        """
+            Overloads the print method
+        """
+
+        return f"({self.id}) {self.name} - {self.type} ({self.id_type})"
