@@ -1,11 +1,16 @@
 # coding: utf-8
 
+# import modules
 import psycopg2
 
+# import additional code
 import Variables as Var
+
+# import models
 from Models.Animal import Animal
 from Models.Type import Type
 from Models.Country import Country
+
 
 def DBConnect():
     """
@@ -25,6 +30,7 @@ def DBConnect():
         print(f"\nCannot connect to specified DB :\n{Error}")
 
     return MyConnection
+
 
 def ExecuteQuery(
     MyConnection,
@@ -47,35 +53,79 @@ def ExecuteQuery(
 
     return MyResult
 
+
 def CreateCollection(
     MyResult,
-    ListTable,
-    NameTable,
+    MyCollection,
+    MyModel,
     ResetCollection = True):
     """
         Create generic collection from query result
     """
     if ResetCollection:
-        ListTable = []
+        MyCollection = []
     
-    # create Countries collection
-    for element in MyResult:
-        # print(f"({Country[0]}) {Country[1]}")
-        # add an new instance of animal to Countries (collection of Countries)
-        # this means each line in animal table (DB)
-        #    equals one instance of Country class 
-        ListTable.append(
-            NameTable(element))
-    return ListTable
+    # create MyCollection collection
+    for Element in MyResult:
+        # add an new instance of model to collection
+        # this means each line in MyResult (DB table)
+        #    equals one instance of MyModel class 
+        MyCollection.append(
+            MyModel(Element))
+    
+    return MyCollection
 
-def PrintCollection(MyCollection, ModelName):
+
+def PrintCollection(
+    MyCollection, 
+    MyModel):
     """ 
-        print Collection
+        Print Collection
     """    
-    # print collection
-    print(f"\n Liste des {ModelName} :")
+
+    # print collection title
+    print(f"\n Liste des {MyModel.CollectionTitle} :")
+
+    # print collection items
     for MyElement in MyCollection:
         print(MyElement)
+
+
+def LoadData(
+    MyConnection, 
+    MyCollection, 
+    MyModel, 
+    OrderBy = None):
+    """
+        Loads data for a specific model
+        from database matching table
+        Store it in appropriate collection
+        And print collection
+    """
+
+    # create query
+    MyQuery = f"SELECT * FROM {MyModel.TableName}"
+    if OrderBy is not None:
+        MyQuery += f" ORDER BY {OrderBy}"
+    
+    # execute query
+    MyResult = ExecuteQuery(MyConnection, MyQuery)
+
+    # create collection
+    MyCollection = CreateCollection(MyResult, MyCollection, MyModel)
+    
+    # specific for recursive model
+    if MyModel is Type:
+        # get parents (recursivity)
+        for Element in MyCollection:
+            Element.GetParent(MyCollection)
+
+    # print collection
+    PrintCollection(MyCollection, MyModel)
+
+    # return collection
+    return MyCollection
+
 
 def Main():
     """
@@ -91,59 +141,10 @@ def Main():
     # # print query result
     # print(f"\n Résultat du test initial : {MyResult[0]}")
 
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM type")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # create Types collection
-    Var.Types = CreateCollection(MyResult, Var.Types, Type)
-    # Get the type parents
-    for type in Var.Types:
-        type.get_parent()
-    # print collection
-    PrintCollection(Var.Types, "types d'animaux")
-
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM animal " +
-        "ORDER BY animal.name")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # print query result
-    # print(f"\n Résultat de la requête : {MyResult}")
-    # create Animals collection
-    Var.Animals = CreateCollection(MyResult, Var.Animals, Animal)
-    # print collection
-    PrintCollection(Var.Animals, "animaux")
-    
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM country")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # create Types collection
-    Var.Countries = CreateCollection(MyResult, Var.Countries, Country)
-    # print collection
-    PrintCollection(Var.Countries, "pays")
-
-
-    # methods to get type name
-    # method 1 : use INNER JOIN
-    # MyQuery = (
-    #     "SELECT animal.id, animal.name, type.name " +
-    #     "FROM animal " +
-    #     "INNER JOIN type ON type.id = animal.id_type " +
-    #     "ORDER BY animal.name")
-    # MyResult = ExecuteQuery(MyConnection, MyQuery)
-
-    # method 2 : use additional query in animal
-    # see comments in Animal model
-
-    # method 3 : create and use collection of Types
-    # see model Type
-
-
+    # load data from DB in collections
+    Var.Types = LoadData(MyConnection, Var.Types, Type)
+    Var.Animals = LoadData(MyConnection, Var.Animals, Animal, "animal.name")   
+    Var.Countries = LoadData(MyConnection, Var.Countries, Country)
 
     # close resources
     MyConnection.close()

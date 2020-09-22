@@ -7,10 +7,16 @@ class Animal():
         Model for Animal table in database
     """
 
+    # class properties
+    TableName = "animal"
+    CollectionTitle = "animaux"
+
+
     def __init__(self,
         Properties):
         """
             Constructor
+            Instance properties
         """
 
         # native properties
@@ -33,7 +39,8 @@ class Animal():
             for MyType
             in Var.Types
             if MyType.id == self.id_type][0]
-    
+
+
     def __str__(self):
         """
             Overloads the print method
