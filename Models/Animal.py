@@ -9,6 +9,7 @@ class Animal():
 
     # class properties
     TableName = "animal"
+    CollectionObject = "Animals"
     CollectionTitle = "animaux"
 
 

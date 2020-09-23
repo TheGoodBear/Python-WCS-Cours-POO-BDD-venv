@@ -7,6 +7,7 @@ class Country():
 
     # class properties
     TableName = "country"
+    CollectionObject = "Countries"
     CollectionTitle = "pays"
 
 
