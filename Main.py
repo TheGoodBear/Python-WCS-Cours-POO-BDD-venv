@@ -5,6 +5,12 @@ import psycopg2
 
 # import additional code
 import Variables as Var
+import Utilities.Utilities as Util
+import Utilities.RichConsole as RC
+
+# import view models
+from ViewModels.Home import Home
+from ViewModels.TablesData import TablesData
 
 # import models
 from Models.Animal import Animal
@@ -33,12 +39,18 @@ def DBConnect():
 
 
 def ExecuteQuery(
-    MyConnection,
-    MyQuery):
+    MyQuery,
+    MyConnection = None,
+    CloseConnection = True):
     """
         Execute Specified SQL query
         return query result
     """
+
+    if MyConnection is None:
+        # connect to DB if connexion does not exist yet
+        MyConnection = DBConnect()
+
     MyResult = None
 
     if MyConnection is not None:
@@ -50,6 +62,10 @@ def ExecuteQuery(
         MyResult = MyCursor.fetchall()
         # close cursor
         MyCursor.close()
+
+    if CloseConnection:
+        # close resources if specified
+        MyConnection.close()
 
     return MyResult
 
@@ -84,7 +100,7 @@ def PrintCollection(
     """    
 
     # print collection title
-    print(f"\n Liste des {MyModel.CollectionTitle} :")
+    print(f"\nListe des {MyModel.CollectionTitle} :")
 
     # print collection items
     for MyElement in MyCollection:
@@ -92,7 +108,6 @@ def PrintCollection(
 
 
 def LoadData(
-    MyConnection, 
     MyCollection, 
     MyModel, 
     OrderBy = None):
@@ -109,7 +124,7 @@ def LoadData(
         MyQuery += f" ORDER BY {OrderBy}"
     
     # execute query
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
+    MyResult = ExecuteQuery(MyQuery)
 
     # create collection
     MyCollection = CreateCollection(MyResult, MyCollection, MyModel)
@@ -121,10 +136,60 @@ def LoadData(
             Element.GetParent(MyCollection)
 
     # print collection
-    PrintCollection(MyCollection, MyModel)
+    # PrintCollection(MyCollection, MyModel)
 
     # return collection
     return MyCollection
+
+
+def InitializeData():
+    """
+        Initialize data (collections)
+    """
+
+    # load data from DB in collections
+    Var.Types = LoadData(Var.Types, Type)
+    Var.Animals = LoadData(Var.Animals, Animal, "animal.name")   
+    Var.Countries = LoadData(Var.Countries, Country)
+
+
+def HomeView():
+    """
+        Show home view
+    """
+
+    # show content
+    Home.PrintHeader()
+    Home.PrintBody()
+    UserChoice = Util.GetUserInput(
+        Home.UserChoiceMessage, 
+        Home.UserChoiceValueType, 
+        PossibleValues=Home.UserChoicePossibleValues)
+
+    # manage data
+    if UserChoice == 1:
+        TablesDataView()
+    elif UserChoice == 0:
+        Var.ApplicationRun = False
+
+
+def TablesDataView():
+    """
+        Show tables data view
+    """
+
+    # show content
+    TablesData.PrintHeader()
+    TablesData.PrintBody()
+
+    # show each collection
+    for Data in TablesData.DataList:
+        PrintCollection(eval(f"Var.{Data.CollectionObject}"), Data)
+
+    # return to home view
+    UserChoice = Util.GetUserInput(
+        TablesData.UserChoiceMessage, 
+        DefaultValue=TablesData.UserChoiceDefaultValue)
 
 
 def Main():
@@ -132,22 +197,14 @@ def Main():
         Program entry
     """
 
-    # connect to DB
-    MyConnection = DBConnect()
-
-    # # try DB
-    # MyQuery = "SELECT version()"
-    # MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # # print query result
-    # print(f"\n Résultat du test initial : {MyResult[0]}")
-
     # load data from DB in collections
-    Var.Types = LoadData(MyConnection, Var.Types, Type)
-    Var.Animals = LoadData(MyConnection, Var.Animals, Animal, "animal.name")   
-    Var.Countries = LoadData(MyConnection, Var.Countries, Country)
+    InitializeData()
 
-    # close resources
-    MyConnection.close()
+    while Var.ApplicationRun:
+        # Show home view
+        HomeView()
+
+    print("\nAu revoir.\n")
 
 
 # code entry point

@@ -8,6 +8,7 @@ class Type():
 
     # class properties
     TableName = "type"
+    CollectionObject = "Types"
     CollectionTitle = "types d'animaux"
 
 
