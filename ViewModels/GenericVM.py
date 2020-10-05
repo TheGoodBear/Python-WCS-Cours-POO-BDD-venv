@@ -15,10 +15,7 @@ class ViewModel():
     # literal content
     Title = ""
     Body = ""
-    UserChoiceMessage = ""
-    UserChoiceValueType = "str"
-    UserChoicePossibleValues = None
-    UserChoiceDefaultValue = ""
+    UserChoice = []
 
 
     @classmethod

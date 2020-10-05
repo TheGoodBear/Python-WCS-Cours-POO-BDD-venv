@@ -2,6 +2,7 @@
 
 # global properties
 ApplicationRun = True
+CurrentView = "Home"
 
 # collections
 Animals = []

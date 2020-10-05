@@ -1,6 +1,8 @@
 # coding: utf-8
 
-class Country():
+import Models.GenericM as GM
+
+class Country(GM.Model):
     """
         Model for Type table in database
     """

@@ -1,8 +1,9 @@
 # coding: utf-8
 
 import Variables as Var
+import Models.GenericM as GM
 
-class Animal():
+class Animal(GM.Model):
     """
         Model for Animal table in database
     """
@@ -35,11 +36,7 @@ class Animal():
         # for MyType in Var.Types:
         #     if MyType.id == self.id_type:
         #         self.type = MyType.name 
-        self.type = [
-            MyType.name
-            for MyType
-            in Var.Types
-            if MyType.id == self.id_type][0]
+        self.type = self.GetTypeName()
 
 
     def __str__(self):
@@ -48,3 +45,15 @@ class Animal():
         """
 
         return f"({self.id}) {self.name} - {self.type} ({self.id_type})"
+
+
+    def GetTypeName(self):
+        """
+            Get type name from id
+        """
+        
+        return [
+            MyType.name
+            for MyType
+            in Var.Types
+            if MyType.id == self.id_type][0]

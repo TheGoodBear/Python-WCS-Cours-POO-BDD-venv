@@ -12,19 +12,18 @@ import ViewModels.GenericVM as VM
 # import models
 from Models.Animal import Animal
 from Models.Type import Type
-from Models.Country import Country
 
 
-class TablesData(VM.ViewModel):
+class Animal_ViewAll(VM.ViewModel):
     """
-        View model for Tables data view
+        View model for Read all CRUD action on Animal model
     """
 
     # class properties
 
     # literal content
-    Title = "Liste de toutes les données de la base"
-    Body = "Voici la liste de toutes les données de la base."
+    Title = f"Liste des {Animal.CollectionTitle}"
+    Body = f"Voici la liste de tous les {Animal.CollectionTitle} de la base."
     UserChoices = [
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
@@ -37,7 +36,7 @@ class TablesData(VM.ViewModel):
     ]
 
     # dynamic data
-    DataList = [Type, Animal, Country]
+    DataList = [Animal]
 
 
     # class method
@@ -69,3 +68,4 @@ class TablesData(VM.ViewModel):
 
         # return to home view
         Var.CurrentView = "Home"
+        

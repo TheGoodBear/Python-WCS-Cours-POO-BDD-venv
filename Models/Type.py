@@ -1,7 +1,9 @@
 # coding: utf-8
+
+import Models.GenericM as GM
 import Variables as Var
 
-class Type():
+class Type(GM.Model):
     """
         Model for Type table in database
     """
