@@ -20,11 +20,9 @@ class Animal_ViewAll(VM.ViewModel):
     """
 
     # class properties
-
-    # literal content
     Title = f"Liste des {Animal.CollectionTitle}"
-    Body = f"Voici la liste de tous les {Animal.CollectionTitle} de la base."
-    UserChoices = [
+    ContentList = [f"\nVoici la liste de tous les {Animal.CollectionTitle} de la base."]
+    UserDataList = [
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
             "ValueType" : "str",
@@ -34,8 +32,6 @@ class Animal_ViewAll(VM.ViewModel):
             "DefaultValue" : ""
         }
     ]
-
-    # dynamic data
     DataList = [Animal]
 
 
@@ -46,26 +42,11 @@ class Animal_ViewAll(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
-        cls.PrintBody()
-
-        # show each collection
-        for Data in cls.DataList:
-            App.PrintCollection(eval(f"Var.{Data.CollectionObject}"), Data)
-
-        UserValue = 0
-        for UserChoice in cls.UserChoices:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
+        cls.PrintContent()
+        cls.PrintDataList()
 
         # return to home view
+        cls.AskData()
         Var.CurrentView = "Home"
-        

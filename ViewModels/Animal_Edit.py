@@ -21,11 +21,8 @@ class Animal_Edit(VM.ViewModel):
     """
 
     # class properties
-
-    # literal content
     Title = f"Modification d'un animal"
-
-    UserChoicesBefore = [
+    UserDataList = [
         {
             "Message" : "\nQuel animal voulez-vous modifier : ",
             "ValueType" : "int",
@@ -33,9 +30,23 @@ class Animal_Edit(VM.ViewModel):
             "Maximum" : None,
             "PossibleValues" : None,
             "DefaultValue" : ""
-        }
-    ]
-    UserChoicesAfter = [
+        },
+        {
+            "Message" : "Nom de l'animal : ",
+            "ValueType" : "str",
+            "Minimum" : 2,
+            "Maximum" : 30,
+            "PossibleValues" : None,
+            "DefaultValue" : ""
+        },
+        {
+            "Message" : "Type de l'animal : ",
+            "ValueType" : "int",
+            "Minimum" : None,
+            "Maximum" : None,
+            "PossibleValues" : None,
+            "DefaultValue" : ""
+        },
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
             "ValueType" : "str",
@@ -46,9 +57,6 @@ class Animal_Edit(VM.ViewModel):
         }
     ]
 
-    # dynamic data
-    # DataList = [Animal]
-
 
     # class method
     @classmethod
@@ -57,81 +65,50 @@ class Animal_Edit(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
 
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesBefore:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
-
         # search specified animal in collection
-        MyAnimal = [
+        AnimalID = cls.AskData(0, 0)[0]
+        AnimalList = [
             Animal 
             for Animal 
             in Var.Animals 
-            if Animal.id == UserValue]
-        if len(MyAnimal) == 1:
-            MyAnimal = MyAnimal[0]
-            cls.Body = f"\nID → {MyAnimal.id}"
-            cls.Body += f"\nNom → {MyAnimal.name}"
-            cls.Body += f"\nType → {MyAnimal.type}"
+            if Animal.id == AnimalID]
+        MyAnimal = AnimalList[0] if len(AnimalList) == 1 else None
+        if MyAnimal is not None:
+            cls.ContentList = [
+                f"\nID → {MyAnimal.id}",
+                f"Nom → {MyAnimal.name}",
+                f"Type → {MyAnimal.type}"]
         else:
-            cls.Body = f"\nL'animal numéro {UserValue} n'existe pas."
+            cls.ContentList = [f"\nL'animal numéro {AnimalID} n'existe pas."]
 
-        # print body
-        cls.PrintBody()
+        # print content
+        cls.PrintContent()
         print()
 
-        # ask updated data
-        MyAnimal.name = Util.GetUserInput(
-            "Nom de l'animal : ", 
-            "str", 
-            2, 
-            30, 
-            None, 
-            MyAnimal.name)
-        MyAnimal.id_type = Util.GetUserInput(
-            "Type de l'animal : ", 
-            "int", 
-            None, 
-            None, 
-            [Type.id for Type in Var.Types], 
-            MyAnimal.id_type)
+        if MyAnimal is not None:
+            # ask updated data
+            cls.UserDataList[1]["DefaultValue"] = MyAnimal.name
+            cls.UserDataList[2]["PossibleValues"] = [Type.id for Type in Var.Types]
+            cls.UserDataList[2]["DefaultValue"] = MyAnimal.id_type
+            MyAnimal.name, MyAnimal.id_type = tuple(cls.AskData(1, 2))
 
-        # update data in DB
-        SQLQuery = f"UPDATE {Animal.TableName} "
-        SQLQuery += "SET name = %s, id_type = %s "
-        SQLQuery += "WHERE id = %s"
-        SQLValues = (MyAnimal.name, MyAnimal.id_type, MyAnimal.id)
-        DB.ExecuteQuery(SQLQuery, SQLValues, True)
+            # update data in DB
+            SQLQuery = f"UPDATE {Animal.TableName} "
+            SQLQuery += "SET name = %s, id_type = %s "
+            SQLQuery += "WHERE id = %s"
+            SQLValues = (MyAnimal.name, MyAnimal.id_type, MyAnimal.id)
+            DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-        # confirm update
-        cls.Body = f"\nL'animal numéro {MyAnimal.id} a été modifié."
-        cls.PrintBody()
+            # confirm update
+            cls.ContentList.append(f"\nL'animal numéro {MyAnimal.id} a été modifié.")
+            cls.PrintContent(len(cls.ContentList) - 1)
 
         # refresh collections from DB
         App.InitializeData()
 
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesAfter:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
-
         # return to home view
+        cls.AskData(len(cls.UserDataList) - 1)
         Var.CurrentView = "Home"
-        

@@ -37,6 +37,7 @@ class Animal(GM.Model):
         #     if MyType.id == self.id_type:
         #         self.type = MyType.name 
         self.type = self.GetTypeName()
+        self.full_type = self.GetTypeName()
 
 
     def __str__(self):
@@ -47,13 +48,21 @@ class Animal(GM.Model):
         return f"({self.id}) {self.name} - {self.type} ({self.id_type})"
 
 
-    def GetTypeName(self):
+    def GetTypeName(self,
+        GetHierarchy = False):
         """
-            Get type name from id
+            Get type name (or full name with parent hierarchy) from id
         """
         
-        return [
-            MyType.name
-            for MyType
-            in Var.Types
-            if MyType.id == self.id_type][0]
+        if GetHierarchy:
+            return [
+                MyType.full_name
+                for MyType
+                in Var.Types
+                if MyType.id == self.id_type][0]
+        else:
+            return [
+                MyType.name
+                for MyType
+                in Var.Types
+                if MyType.id == self.id_type][0]

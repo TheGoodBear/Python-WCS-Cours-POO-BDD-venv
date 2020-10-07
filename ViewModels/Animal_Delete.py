@@ -21,11 +21,8 @@ class Animal_Delete(VM.ViewModel):
     """
 
     # class properties
-
-    # literal content
     Title = f"Suppression d'un animal"
-
-    UserChoicesBefore = [
+    UserDataList = [
         {
             "Message" : "\nQuel animal voulez-vous supprimer : ",
             "ValueType" : "int",
@@ -33,9 +30,7 @@ class Animal_Delete(VM.ViewModel):
             "Maximum" : None,
             "PossibleValues" : None,
             "DefaultValue" : ""
-        }
-    ]
-    UserChoicesAfter1 = [
+        },
         {
             "Message" : "\nConfirmez-vous la suppression ? ",
             "ValueType" : "bool",
@@ -43,9 +38,7 @@ class Animal_Delete(VM.ViewModel):
             "Maximum" : None,
             "PossibleValues" : None,
             "DefaultValue" : False
-        }
-    ]
-    UserChoicesAfter2 = [
+        },
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
             "ValueType" : "str",
@@ -56,9 +49,6 @@ class Animal_Delete(VM.ViewModel):
         }
     ]
 
-    # dynamic data
-    # DataList = [Animal]
-
 
     # class method
     @classmethod
@@ -67,76 +57,46 @@ class Animal_Delete(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
 
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesBefore:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
-
         # search specified animal in collection
-        MyAnimal = [
+        AnimalID = cls.AskData(0, 0)[0]
+        AnimalList = [
             Animal 
             for Animal 
             in Var.Animals 
-            if Animal.id == UserValue]
-        if len(MyAnimal) == 1:
-            MyAnimal = MyAnimal[0]
-            cls.Body = f"\nID → {MyAnimal.id}"
-            cls.Body += f"\nNom → {MyAnimal.name}"
-            cls.Body += f"\nType → {MyAnimal.type}"
+            if Animal.id == AnimalID]
+        MyAnimal = AnimalList[0] if len(AnimalList) == 1 else None
+        if MyAnimal is not None:
+            cls.ContentList = [
+                f"\nID → {MyAnimal.id}",
+                f"Nom → {MyAnimal.name}",
+                f"Type → {MyAnimal.type}"]
         else:
-            cls.Body = f"\nL'animal numéro {UserValue} n'existe pas."
+            cls.ContentList = [f"\nL'animal numéro {AnimalID} n'existe pas."]
 
-        # print body
-        cls.PrintBody()
+        # print content
+        cls.PrintContent()
         print()
+        
+        if MyAnimal is not None:
+            # ask user confirmation
+            Confirm = cls.AskData(1, 1)
+            if Confirm:
+                # delete data in DB
+                SQLQuery = f"DELETE FROM {Animal.TableName} "
+                SQLQuery += "WHERE id = %s"
+                SQLValues = (MyAnimal.id, )
+                DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-        # ask user confirmation
-        UserValue = 0
-        for UserChoice in cls.UserChoicesAfter1:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
+                # confirm delete
+                cls.ContentList.append(f"\nL'animal numéro {MyAnimal.id} a été supprimé.")
+                cls.PrintContent(len(cls.ContentList) - 1)
 
-        if UserValue:
-            # delete data in DB
-            SQLQuery = f"DELETE FROM {Animal.TableName} "
-            SQLQuery += "WHERE id = %s"
-            SQLValues = (MyAnimal.id, )
-            DB.ExecuteQuery(SQLQuery, SQLValues, True)
-
-            # confirm update
-            cls.Body = f"\nL'animal numéro {MyAnimal.id} a été supprimé."
-            cls.PrintBody()
-
-            # refresh collections from DB
-            App.InitializeData()
-
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesAfter2:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
+                # refresh collections from DB
+                App.InitializeData()
 
         # return to home view
+        cls.AskData(len(cls.UserDataList) - 1)
         Var.CurrentView = "Home"
-        

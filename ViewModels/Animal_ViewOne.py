@@ -20,11 +20,8 @@ class Animal_ViewOne(VM.ViewModel):
     """
 
     # class properties
-
-    # literal content
     Title = f"Détail d'un animal"
-
-    UserChoicesBefore = [
+    UserDataList = [
         {
             "Message" : "\nDe quel animal voulez-vous le détail : ",
             "ValueType" : "int",
@@ -32,9 +29,7 @@ class Animal_ViewOne(VM.ViewModel):
             "Maximum" : None,
             "PossibleValues" : None,
             "DefaultValue" : ""
-        }
-    ]
-    UserChoicesAfter = [
+        },
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
             "ValueType" : "str",
@@ -45,9 +40,6 @@ class Animal_ViewOne(VM.ViewModel):
         }
     ]
 
-    # dynamic data
-    # DataList = [Animal]
-
 
     # class method
     @classmethod
@@ -56,53 +48,30 @@ class Animal_ViewOne(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
-
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesBefore:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
+        cls.PrintDataList()    
 
         # search specified animal in collection
-        MyAnimal = [
+        AnimalID = cls.AskData(0, 0)[0]
+        AnimalList = [
             Animal 
             for Animal 
             in Var.Animals 
-            if Animal.id == UserValue]
-        if len(MyAnimal) == 1:
-            cls.Body = f"\nID → {MyAnimal[0].id}"
-            cls.Body += f"\nNom → {MyAnimal[0].name}"
-            cls.Body += f"\nType → {MyAnimal[0].type}"
+            if Animal.id == AnimalID]
+        MyAnimal = AnimalList[0] if len(AnimalList) == 1 else None
+        if MyAnimal is not None:
+            cls.ContentList = [
+                f"\nID → {MyAnimal.id}",
+                f"Nom → {MyAnimal.name}",
+                f"Type → {MyAnimal.type}"]
         else:
-            cls.Body = f"\nL'animal numéro {UserValue} n'existe pas."
+            cls.ContentList = [f"\nL'animal numéro {AnimalID} n'existe pas."]
 
-        # print body
-        cls.PrintBody()
-
-        # # show each collection
-        # for Data in cls.DataList:
-        #     App.PrintCollection(eval(f"Var.{Data.CollectionObject}"), Data)
-
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesAfter:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
+        # print content
+        cls.PrintContent()
 
         # return to home view
+        cls.AskData(len(cls.UserDataList) - 1)
         Var.CurrentView = "Home"
         

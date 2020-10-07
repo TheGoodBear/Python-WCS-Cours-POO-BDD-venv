@@ -21,11 +21,24 @@ class Animal_Add(VM.ViewModel):
     """
 
     # class properties
-
-    # literal content
     Title = f"Création d'un animal"
-
-    UserChoicesAfter = [
+    UserDataList = [
+        {
+            "Message" : "Nom de l'animal : ",
+            "ValueType" : "str",
+            "Minimum" : 2,
+            "Maximum" : 30,
+            "PossibleValues" : None,
+            "DefaultValue" : None
+        },
+        {
+            "Message" : "Type de l'animal : ",
+            "ValueType" : "int",
+            "Minimum" : None,
+            "Maximum" : None,
+            "PossibleValues" : None,
+            "DefaultValue" : None
+        },
         {
             "Message" : "\nAppuyez sur Entrée pour revenir au menu...",
             "ValueType" : "str",
@@ -36,9 +49,6 @@ class Animal_Add(VM.ViewModel):
         }
     ]
 
-    # dynamic data
-    # DataList = [Animal]
-
 
     # class method
     @classmethod
@@ -47,28 +57,12 @@ class Animal_Add(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
 
-        # print body
-        cls.PrintBody()
-        print()
-
-        # ask updated data
-        AnimalName = Util.GetUserInput(
-            "Nom de l'animal : ", 
-            "str", 
-            2, 
-            30, 
-            None)
-        AnimalIdType = Util.GetUserInput(
-            "Type de l'animal : ", 
-            "int", 
-            None, 
-            None, 
-            [Type.id for Type in Var.Types])
+        # ask data
+        cls.UserDataList[1]["PossibleValues"] = [Type.id for Type in Var.Types]
+        AnimalName, AnimalIdType = tuple(cls.AskData(0, 1))
 
         # create data in DB
         SQLQuery = f"INSERT INTO {Animal.TableName} "
@@ -77,24 +71,13 @@ class Animal_Add(VM.ViewModel):
         SQLValues = (AnimalName, AnimalIdType)
         DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-        # confirm update
-        cls.Body = f"\nL'animal a été ajouté."
-        cls.PrintBody()
+        # confirm create
+        cls.ContentList = [f"\nL'animal a été ajouté."]
+        cls.PrintContent()
 
         # refresh collections from DB
         App.InitializeData()
 
-        # ask user data
-        UserValue = 0
-        for UserChoice in cls.UserChoicesAfter:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
-
         # return to home view
+        cls.AskData(len(cls.UserDataList) - 1)
         Var.CurrentView = "Home"
-        

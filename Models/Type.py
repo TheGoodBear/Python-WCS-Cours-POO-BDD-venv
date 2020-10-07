@@ -27,7 +27,9 @@ class Type(GM.Model):
         self.id_parent = Properties[2]
         
         # calculated properties
-        self.parent = None
+        self.parent_hierarchy = None    # full parent hierarchy as list
+        self.parent_name = None         # printable parent hierarchy
+        self.full_name = None           # name including hierarchy
 
 
     def GetParent(self, MyCollection):
@@ -35,12 +37,15 @@ class Type(GM.Model):
             Call the WhosYourDaddy method
         """
 
-        self.parent = self._WhosYourDaddy(self.id_parent, MyCollection)
+        self.parent_hierarchy = self._WhosYourDaddy(self.id_parent, MyCollection)
+        self.parent_name = ' → '.join(self.parent_hierarchy)
+        self.full_name = ' → '.join(self.parent_hierarchy + [self.name])
 
 
     def _WhosYourDaddy(self, parent_id, MyCollection, parent_list=None):
         """
             Recursively find all the parents
+            and return a list of parents
             _ private methode
         """
 
@@ -76,4 +81,4 @@ class Type(GM.Model):
             Overloads the print method
         """
 
-        return f"({self.id}) {self.name} - {' → '.join(self.parent)}"
+        return f"({self.id}) {self.name} - {self.parent_name}"

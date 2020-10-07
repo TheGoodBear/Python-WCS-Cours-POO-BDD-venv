@@ -9,24 +9,23 @@ import Utilities.ApplicationUtilities as App
 # import generic view model
 import ViewModels.GenericVM as VM
 
+
 class Home(VM.ViewModel):
     """
         View model for Home view
     """
 
     # class properties
-
-    # literal content
     Title = "Gestion des observations d'animaux"
-    Body = (
-        "1 - Voir les données de toutes les tables\n" +
-        "2 - Voir les animaux\n" + 
-        "3 - Voir un animal\n" + 
-        "4 - Modifier un animal\n" + 
-        "5 - Ajouter un animal\n" + 
-        "6 - Supprimer un animal\n" + 
-        "0 - Quitter l'application")
-    UserChoices = [
+    ContentList = [
+        "1 - Voir les données de toutes les tables",
+        "2 - Voir les animaux",
+        "3 - Voir un animal",
+        "4 - Modifier un animal",
+        "5 - Ajouter un animal", 
+        "6 - Supprimer un animal",
+        "0 - Quitter l'application"]
+    UserDataList = [
         {
             "Message" : "\nSélectionnez votre choix : ",
             "ValueType" : "int",
@@ -45,34 +44,23 @@ class Home(VM.ViewModel):
             Show view
         """
 
-        RC.ClearConsole()
-
         # show content
         cls.PrintHeader()
-        cls.PrintBody()
+        cls.PrintContent()
+        Result = cls.AskData()[0]
 
-        UserValue = 0
-        for UserChoice in cls.UserChoices:
-            UserValue = Util.GetUserInput(
-                UserChoice["Message"], 
-                UserChoice["ValueType"], 
-                UserChoice["Minimum"], 
-                UserChoice["Maximum"], 
-                UserChoice["PossibleValues"], 
-                UserChoice["DefaultValue"])
-
-        # manage data
-        if UserValue == 1:
+        # manage user data
+        if Result == 1:
             Var.CurrentView = "TablesData"
-        elif UserValue == 2:
+        elif Result == 2:
             Var.CurrentView = "Animal_ViewAll"
-        elif UserValue == 3:
+        elif Result == 3:
             Var.CurrentView = "Animal_ViewOne"
-        elif UserValue == 4:
+        elif Result == 4:
             Var.CurrentView = "Animal_Edit"
-        elif UserValue == 5:
+        elif Result == 5:
             Var.CurrentView = "Animal_Add"
-        elif UserValue == 6:
+        elif Result == 6:
             Var.CurrentView = "Animal_Delete"
-        elif UserValue == 0:
+        elif Result == 0:
             Var.ApplicationRun = False
