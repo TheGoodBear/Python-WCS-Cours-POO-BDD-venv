@@ -3,22 +3,23 @@
 # import additional code
 
 # import generic view model
-import Variables as Var
 import ViewModels.GenericVM as VM
 
 # import models
 from Models.Animal import Animal
+from Models.Type import Type
+from Models.Country import Country
 
 
-class Animal_ViewAll(VM.ViewModel):
+class AllTablesData(VM.ViewModel):
     """
-        View model for Read all CRUD action on Animal model
+        View model for AllTablesData view
     """
 
     # class properties
-    Title = f"Liste des {Animal.CollectionTitle}"
-    ContentList = [f"Voici la liste des {len(Var.Animals)} {Animal.CollectionTitle} de la base."]
-    DataList = [Animal]
+    Title = "Liste de toutes les données de la base"
+    ContentList = ["Voici la liste de toutes les données de la base."]
+    DataList = [Type, Animal, Country]
 
 
     # class method

@@ -91,3 +91,18 @@ class ViewModel():
         """
 
         print("\n".rjust(len(cls.Title) + 1, "-"))
+
+
+    @staticmethod
+    def ReturnToHome():
+        """
+            Ask for user entry then return to home view
+        """
+
+        # ask user to type Enter key
+        Util.GetUserInput(
+            "\nAppuyez sur Entrée pour revenir au menu...", 
+            DefaultValue = "")
+
+        # return to home view
+        Var.CurrentView = "Home"

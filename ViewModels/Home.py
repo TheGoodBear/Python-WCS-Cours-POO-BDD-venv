@@ -51,7 +51,7 @@ class Home(VM.ViewModel):
 
         # manage user data
         if Result == 1:
-            Var.CurrentView = "TablesData"
+            Var.CurrentView = "AllTablesData"
         elif Result == 2:
             Var.CurrentView = "Animal_ViewAll"
         elif Result == 3:

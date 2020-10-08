@@ -38,8 +38,12 @@ class Type(GM.Model):
         """
 
         self.parent_hierarchy = self._WhosYourDaddy(self.id_parent, MyCollection)
-        self.parent_name = ' → '.join(self.parent_hierarchy)
-        self.full_name = ' → '.join(self.parent_hierarchy + [self.name])
+        self.parent_hierarchy.reverse()
+        self.parent_name = " → ".join(self.parent_hierarchy)
+        self.full_name = (
+            " → ".join(self.parent_hierarchy + [self.name]) 
+            if self.parent_hierarchy[0] != "Aucun" 
+            else self.name)
 
 
     def _WhosYourDaddy(self, parent_id, MyCollection, parent_list=None):
