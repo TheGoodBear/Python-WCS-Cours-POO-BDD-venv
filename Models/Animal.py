@@ -16,6 +16,53 @@ class Animal(GM.Model):
     TableName = "animal"
     CollectionObject = "Animals"
     CollectionTitle = "animaux"
+    Fields = [
+        {
+            "Name" : "id",
+            "Label" : "ID",
+            "Native" : True,
+            "Key" : "Primary",
+            "Add" : False,
+            "Update" : False,
+            "Print" : True
+        },
+        {
+            "Name" : "name",
+            "Label" : "Nom",
+            "Native" : True,
+            "Key" : None,
+            "Add" : True,
+            "Update" : True,
+            "Print" : True
+        },
+        {
+            "Name" : "id_type",
+            "Label" : "IDType",
+            "Native" : True,
+            "Key" : "type",
+            "Add" : True,
+            "Update" : True,
+            "Print" : False
+        },
+        {
+            "Name" : "type",
+            "Label" : "Espèce",
+            "Native" : False,
+            "Key" : None,
+            "Add" : False,
+            "Update" : False,
+            "Print" : False
+        },
+        {
+            "Name" : "full_type",
+            "Label" : "Espèce",
+            "Native" : False,
+            "Key" : None,
+            "Add" : False,
+            "Update" : False,
+            "Print" : True
+        },
+    ]
 
 
     def __init__(self,
@@ -25,10 +72,8 @@ class Animal(GM.Model):
             Instance properties
         """
 
-        # native properties
-        self.id = Properties[0]
-        self.name = Properties[1]
-        self.id_type = Properties[2]
+        # inherits from parent constructor
+        super().__init__(Properties)
         
         # calculated properties
         self.type = self.GetTypeName()              # type name matching id_type
@@ -65,48 +110,48 @@ class Animal(GM.Model):
                 if MyType.id == self.id_type][0]
 
     
-    @staticmethod
-    def GetInstance(ID):
-        """
-            Get Animal with specified ID from collection
-        """
+    # @staticmethod
+    # def GetInstance(ID):
+    #     """
+    #         Get Animal with specified ID from collection
+    #     """
 
-        # get from collection
-        AnimalList = [
-            Animal 
-            for Animal 
-            in Var.Animals 
-            if Animal.id == ID]
+    #     # get from collection
+    #     AnimalList = [
+    #         Animal 
+    #         for Animal 
+    #         in Var.Animals 
+    #         if Animal.id == ID]
         
-        # return animal object if found else None
-        return AnimalList[0] if len(AnimalList) == 1 else None
+    #     # return animal object if found else None
+    #     return AnimalList[0] if len(AnimalList) == 1 else None
 
     
-    @staticmethod
-    def Add(Name, IDType):
-        """
-            Add MyAnimal in DB,
-            refresh collection
-            and return message confirmation
-        """
+    # @staticmethod
+    # def Add(Name, IDType):
+    #     """
+    #         Add MyAnimal in DB,
+    #         refresh collection
+    #         and return message confirmation
+    #     """
 
-        try:
-            # add data in DB
-            SQLQuery = f"INSERT INTO {Animal.TableName} "
-            SQLQuery += "(name, id_type) "
-            SQLQuery += "VALUES (%s, %s) "
-            SQLValues = (Name, IDType)
-            DB.ExecuteQuery(SQLQuery, SQLValues, True)
+    #     try:
+    #         # add data in DB
+    #         SQLQuery = f"INSERT INTO {Animal.TableName} "
+    #         SQLQuery += "(name, id_type) "
+    #         SQLQuery += "VALUES (%s, %s) "
+    #         SQLValues = (Name, IDType)
+    #         DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-            # refresh collections from DB
-            App.InitializeData()
+    #         # refresh collections from DB
+    #         App.InitializeData()
             
-            # success message
-            return f"\nL'animal a été ajouté."
+    #         # success message
+    #         return f"\nL'animal a été ajouté."
 
-        except:
-            # error
-            return f"\nL'animal n'a pas pû être ajouté dans la base de données."
+        # except:
+        #     # error
+        #     return f"\nL'animal n'a pas pû être ajouté dans la base de données."
 
     
     @staticmethod
@@ -171,7 +216,7 @@ class Animal(GM.Model):
         """
 
         # get animal from collection
-        MyAnimal = cls.GetInstance(ID)
+        MyAnimal = cls.GetInstance(Animal, ID)
 
         if MyAnimal is not None:
             return (MyAnimal, 
