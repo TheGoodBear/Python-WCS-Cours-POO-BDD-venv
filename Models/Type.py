@@ -11,6 +11,7 @@ class Type(GM.Model):
     # class properties
     TableName = "type"
     CollectionObject = "Types"
+    ElementTitle = "le type d'animal"
     CollectionTitle = "types d'animaux"
 
 

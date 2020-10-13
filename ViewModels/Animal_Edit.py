@@ -68,10 +68,10 @@ class Animal_Edit(VM.ViewModel):
             cls.UserDataList[1]["DefaultValue"] = MyAnimal.name
             cls.UserDataList[2]["PossibleValues"] = [Type.id for Type in Var.Types]
             cls.UserDataList[2]["DefaultValue"] = MyAnimal.id_type
-            MyAnimal.name, MyAnimal.id_type = tuple(cls.AskData(1, 2))
+            AnimalData = tuple(cls.AskData(1, 2))
 
             # update animal
-            cls.ContentList.append(Animal.Edit(MyAnimal))
+            cls.ContentList.append(Animal.Update(Animal, AnimalID, AnimalData))
             # print result
             cls.PrintContent(len(cls.ContentList) - 1)
 

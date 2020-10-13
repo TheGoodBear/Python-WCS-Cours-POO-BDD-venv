@@ -15,6 +15,7 @@ class Animal(GM.Model):
     # class properties
     TableName = "animal"
     CollectionObject = "Animals"
+    ElementTitle = "l'animal"
     CollectionTitle = "animaux"
     Fields = [
         {
@@ -154,57 +155,57 @@ class Animal(GM.Model):
         #     return f"\nL'animal n'a pas pû être ajouté dans la base de données."
 
     
-    @staticmethod
-    def Edit(MyAnimal):
-        """
-            Update MyAnimal in DB,
-            refresh collection
-            and return message confirmation
-        """
+    # @staticmethod
+    # def Edit(MyAnimal):
+    #     """
+    #         Update MyAnimal in DB,
+    #         refresh collection
+    #         and return message confirmation
+    #     """
 
-        try:
-            # update data in DB
-            SQLQuery = f"UPDATE {Animal.TableName} "
-            SQLQuery += "SET name = %s, id_type = %s "
-            SQLQuery += "WHERE id = %s"
-            SQLValues = (MyAnimal.name, MyAnimal.id_type, MyAnimal.id)
-            DB.ExecuteQuery(SQLQuery, SQLValues, True)
+    #     try:
+    #         # update data in DB
+    #         SQLQuery = f"UPDATE {Animal.TableName} "
+    #         SQLQuery += "SET name = %s, id_type = %s "
+    #         SQLQuery += "WHERE id = %s"
+    #         SQLValues = (MyAnimal.name, MyAnimal.id_type, MyAnimal.id)
+    #         DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-            # refresh collections from DB
-            App.InitializeData()
+    #         # refresh collections from DB
+    #         App.InitializeData()
             
-            # success message
-            return f"\nL'animal numéro {MyAnimal.id} a été modifié."
+    #         # success message
+    #         return f"\nL'animal numéro {MyAnimal.id} a été modifié."
 
-        except:
-            # error
-            return f"\nL'animal numéro {MyAnimal.id} n'a pas pû être modifié dans la base de données."
+    #     except:
+    #         # error
+    #         return f"\nL'animal numéro {MyAnimal.id} n'a pas pû être modifié dans la base de données."
 
     
-    @staticmethod
-    def Delete(ID):
-        """
-            Delete Animal with specified ID from DB,
-            refresh collection
-            and return message confirmation
-        """
+    # @staticmethod
+    # def Delete(ID):
+    #     """
+    #         Delete Animal with specified ID from DB,
+    #         refresh collection
+    #         and return message confirmation
+    #     """
 
-        try:
-            # delete data in DB
-            SQLQuery = f"DELETE FROM {Animal.TableName} "
-            SQLQuery += "WHERE id = %s"
-            SQLValues = (ID, )
-            DB.ExecuteQuery(SQLQuery, SQLValues, True)
+    #     try:
+    #         # delete data in DB
+    #         SQLQuery = f"DELETE FROM {Animal.TableName} "
+    #         SQLQuery += "WHERE id = %s"
+    #         SQLValues = (ID, )
+    #         DB.ExecuteQuery(SQLQuery, SQLValues, True)
 
-            # refresh collections from DB
-            App.InitializeData()
+    #         # refresh collections from DB
+    #         App.InitializeData()
             
-            # success message
-            return f"\nL'animal numéro {ID} a été supprimé."
+    #         # success message
+    #         return f"\nL'animal numéro {ID} a été supprimé."
 
-        except:
-            # error
-            return f"\nL'animal numéro {ID} n'a pas pû être supprimé dans la base de données."
+    #     except:
+    #         # error
+    #         return f"\nL'animal numéro {ID} n'a pas pû être supprimé dans la base de données."
 
     
     @classmethod

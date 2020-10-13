@@ -59,7 +59,8 @@ class Animal_Delete(VM.ViewModel):
             Confirm = cls.AskData(1, 1)
             if Confirm:
                 # delete animal
-                cls.ContentList.append(Animal.Delete(MyAnimal.id))
+                # cls.ContentList.append(Animal.Delete(Animal, MyAnimal.id))
+                cls.ContentList.append(MyAnimal.Delete2())
                 # print result
                 cls.PrintContent(len(cls.ContentList) - 1)
 

@@ -49,9 +49,9 @@ class Animal_Add(VM.ViewModel):
 
         # ask data
         cls.UserDataList[1]["PossibleValues"] = [Type.id for Type in Var.Types]
-        AnimalName, AnimalIDType = tuple(cls.AskData(0, 1))
+        AnimalData = tuple(cls.AskData(0, 1))
         # create animal
-        cls.ContentList.append(Animal.Add(Animal, AnimalName, AnimalIDType))
+        cls.ContentList.append(Animal.Add(Animal, AnimalData))
         cls.PrintContent()
 
         # return to home view

@@ -10,6 +10,7 @@ class Country(GM.Model):
     # class properties
     TableName = "country"
     CollectionObject = "Countries"
+    ElementTitle = "le pays"
     CollectionTitle = "pays"
 
 
