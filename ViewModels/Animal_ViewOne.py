@@ -41,6 +41,7 @@ class Animal_ViewOne(VM.ViewModel):
 
         # search specified animal in collection
         AnimalID = cls.AskData(0, 0)[0]
+        # get animal data to print
         cls.ContentList = Animal.GetData(AnimalID)[1]
 
         # print content

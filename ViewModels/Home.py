@@ -57,7 +57,7 @@ class Home(VM.ViewModel):
         elif Result == 3:
             Var.CurrentView = "Animal_ViewOne"
         elif Result == 4:
-            Var.CurrentView = "Animal_Edit"
+            Var.CurrentView = "Animal_Update"
         elif Result == 5:
             Var.CurrentView = "Animal_Add"
         elif Result == 6:

@@ -47,11 +47,16 @@ class Animal_Add(VM.ViewModel):
         # show content
         cls.PrintHeader()
 
-        # ask data
+        # complete user data
         cls.UserDataList[1]["PossibleValues"] = [Type.id for Type in Var.Types]
-        AnimalData = tuple(cls.AskData(0, 1))
+
+        # ask data
+        # create new temporary animal (with primary key = None)
+        MyAnimal = Animal((None, ) + tuple(cls.AskData(0, 1)))
+        
         # create animal
-        cls.ContentList.append(Animal.Add(Animal, AnimalData))
+        cls.ContentList.append(MyAnimal.Add())
+        # print result
         cls.PrintContent()
 
         # return to home view

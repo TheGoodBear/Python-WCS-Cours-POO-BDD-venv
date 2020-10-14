@@ -1,7 +1,9 @@
 # coding: utf-8
 
-import Models.GenericM as GM
+# import additional code
 import Variables as Var
+import Models.GenericM as GM
+
 
 class Type(GM.Model):
     """
@@ -13,6 +15,62 @@ class Type(GM.Model):
     CollectionObject = "Types"
     ElementTitle = "le type d'animal"
     CollectionTitle = "types d'animaux"
+    Fields = [
+        {
+            "Name" : "id",
+            "Label" : "ID",
+            "Native" : True,
+            "Key" : "Primary",
+            "Add" : False,
+            "Update" : False,
+            "Print" : True
+        },
+        {
+            "Name" : "name",
+            "Label" : "Nom",
+            "Native" : True,
+            "Key" : None,
+            "Add" : True,
+            "Update" : True,
+            "Print" : True
+        },
+        {
+            "Name" : "id_parent",
+            "Label" : "IDParent",
+            "Native" : True,
+            "Key" : "type",
+            "Add" : True,
+            "Update" : True,
+            "Print" : False
+        },
+        {
+            "Name" : "parent_hierarchy",
+            "Label" : "Hiérarchie",
+            "Native" : False,
+            "Key" : None,
+            "Add" : False,
+            "Update" : False,
+            "Print" : True
+        },
+        {
+            "Name" : "parent_name",
+            "Label" : "Espèce",
+            "Native" : False,
+            "Key" : None,
+            "Add" : False,
+            "Update" : False,
+            "Print" : False
+        },
+        {
+            "Name" : "full_name",
+            "Label" : "Espèce",
+            "Native" : False,
+            "Key" : None,
+            "Add" : False,
+            "Update" : False,
+            "Print" : False
+        },
+    ]
 
 
     def __init__(self,

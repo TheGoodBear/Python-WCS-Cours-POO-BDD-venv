@@ -10,7 +10,7 @@ import ViewModels.GenericVM as VM
 from Models.Animal import Animal
 
 
-class Animal_Edit(VM.ViewModel):
+class Animal_Update(VM.ViewModel):
     """
         View model for update CRUD action on Animal model
     """
@@ -64,14 +64,16 @@ class Animal_Edit(VM.ViewModel):
         print()
 
         if MyAnimal is not None:
-            # ask updated data
+            # complete user data
             cls.UserDataList[1]["DefaultValue"] = MyAnimal.name
             cls.UserDataList[2]["PossibleValues"] = [Type.id for Type in Var.Types]
             cls.UserDataList[2]["DefaultValue"] = MyAnimal.id_type
-            AnimalData = tuple(cls.AskData(1, 2))
+            
+            # ask updated data
+            MyAnimal.name, MyAnimal.id_type = cls.AskData(1, 2)
 
             # update animal
-            cls.ContentList.append(Animal.Update(Animal, AnimalID, AnimalData))
+            cls.ContentList.append(MyAnimal.Update())
             # print result
             cls.PrintContent(len(cls.ContentList) - 1)
 

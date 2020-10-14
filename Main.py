@@ -11,7 +11,7 @@ from ViewModels.Home import Home
 from ViewModels.AllTablesData import AllTablesData
 from ViewModels.Animal_ViewAll import Animal_ViewAll
 from ViewModels.Animal_ViewOne import Animal_ViewOne
-from ViewModels.Animal_Edit import Animal_Edit
+from ViewModels.Animal_Update import Animal_Update
 from ViewModels.Animal_Add import Animal_Add
 from ViewModels.Animal_Delete import Animal_Delete
 

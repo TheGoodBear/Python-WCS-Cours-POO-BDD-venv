@@ -17,7 +17,7 @@ class Animal_ViewAll(VM.ViewModel):
 
     # class properties
     Title = f"Liste des {Animal.CollectionTitle}"
-    ContentList = [f"Voici la liste des {len(Var.Animals)} {Animal.CollectionTitle} de la base."]
+    ContentList = []
     DataList = [Animal]
 
 
@@ -30,7 +30,10 @@ class Animal_ViewAll(VM.ViewModel):
 
         # show content
         cls.PrintHeader()
+            
+        cls.ContentList = [f"Voici la liste des {len(Var.Animals)} {Animal.CollectionTitle} de la base."]
         cls.PrintContent()
+
         cls.PrintDataList()
 
         # return to home view
