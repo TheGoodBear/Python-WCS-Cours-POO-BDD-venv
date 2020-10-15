@@ -1,9 +1,9 @@
 # coding: utf-8
 
 # import additional code
+import Variables as Var
 
 # import generic view model
-import Variables as Var
 import ViewModels.GenericVM as VM
 
 # import models

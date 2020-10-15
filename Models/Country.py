@@ -1,7 +1,6 @@
 # coding: utf-8
 
 # import additional code
-import Variables as Var
 import Models.GenericM as GM
 
 
@@ -43,11 +42,12 @@ class Country(GM.Model):
         """
             Constructor
             Instance properties
-        """
+        """        
+
+        # inherits from parent constructor (native properties)
+        super().__init__(Properties)
         
-        # native properties
-        self.id = Properties[0]
-        self.name = Properties[1]
+        # calculated properties
 
 
     def __str__(self):

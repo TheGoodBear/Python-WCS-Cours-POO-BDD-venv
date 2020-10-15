@@ -27,8 +27,11 @@ class ViewModel():
             Print header
         """
 
+        # clear console
         RC.ClearConsole()
+        # print view title
         print(cls.Title)
+        # underline title
         cls._UnderlineTitle()
 
 
@@ -40,8 +43,10 @@ class ViewModel():
             Print body content (subset of ContentList)
         """
 
+        # get slice of ContentList to be printed
         ListSubset = cls.ContentList[Start:] if End is None else cls.ContentList[Start:End + 1]
 
+        # print each string in slice
         for Content in ListSubset:
             print(Content)
 
@@ -56,8 +61,10 @@ class ViewModel():
             and return a list of results
         """
 
+        # get slice of UserDataList to be inputed
         ListSubset = cls.UserDataList[Start:] if End is None else cls.UserDataList[Start:End + 1]
 
+        # input each data in slice and store results in a new list
         ResultList = []
         for Data in ListSubset:
             Result = Util.GetUserInput(
@@ -69,6 +76,7 @@ class ViewModel():
                 Data["DefaultValue"])
             ResultList.append(Result)
 
+        # return results
         return ResultList
 
 
@@ -78,8 +86,9 @@ class ViewModel():
             Print data list
         """
 
-        # print each collection
+        # for each collection in data list
         for Data in cls.DataList:
+            # print instances in collection
             App.PrintCollection(eval(f"Var.{Data.CollectionObject}"), Data)
 
 
@@ -90,6 +99,7 @@ class ViewModel():
             _ private method
         """
 
+        # create a string of - of same length as title and prints it to underline
         print("\n".rjust(len(cls.Title) + 1, "-"))
 
 

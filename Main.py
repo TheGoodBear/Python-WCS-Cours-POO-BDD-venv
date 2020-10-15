@@ -25,11 +25,12 @@ def Main():
     # load data from DB in collections
     App.InitializeData()
 
-    # main apllication loop
+    # main program loop
     while Var.ApplicationRun:
-        # Show current view
+        # show current view
         eval(f"{Var.CurrentView}").Show()
 
+    # quit program
     print("\nAu revoir.\n")
 
 

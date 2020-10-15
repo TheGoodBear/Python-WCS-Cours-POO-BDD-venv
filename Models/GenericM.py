@@ -26,6 +26,7 @@ class Model():
     CollectionObject = ""
     ElementTitle = "l'animal"
     CollectionTitle = ""
+    Fields = []
 
 
     # methods    
@@ -37,8 +38,11 @@ class Model():
         """
 
         # native properties
+        # for each field in DB table
         for index, Field in enumerate(self.Fields):
+            # if field is native (not calculated)
             if Field["Native"]:
+                # create matching property
                 setattr(self, Field["Name"], Properties[index])
         
     
@@ -82,7 +86,6 @@ class Model():
             return FormattedFieldsNames, tuple(FieldsValues)
         
     
-    # methods    
     @classmethod
     def GetInstance(cls, ID):
         """

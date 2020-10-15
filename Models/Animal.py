@@ -72,7 +72,7 @@ class Animal(GM.Model):
             Instance properties
         """
 
-        # inherits from parent constructor
+        # inherits from parent constructor (native properties)
         super().__init__(Properties)
         
         # calculated properties

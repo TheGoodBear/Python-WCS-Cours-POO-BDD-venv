@@ -31,7 +31,7 @@ class Animal_Delete(VM.ViewModel):
             "Minimum" : None,
             "Maximum" : None,
             "PossibleValues" : None,
-            "DefaultValue" : "N"
+            "DefaultValue" : False
         }
     ]
 
@@ -56,7 +56,7 @@ class Animal_Delete(VM.ViewModel):
         
         if MyAnimal is not None:
             # ask user confirmation
-            Confirm = cls.AskData(1, 1)
+            Confirm = cls.AskData(1, 1)[0]
             if Confirm:
                 # delete animal
                 cls.ContentList.append(MyAnimal.Delete())
