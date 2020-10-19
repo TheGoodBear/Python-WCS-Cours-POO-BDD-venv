@@ -85,7 +85,7 @@ class Type(GM.Model):
         # calculated properties
         self.parent_hierarchy = None    # full parent hierarchy as list
         self.parent_name = None         # printable parent hierarchy
-        self.full_name = None           # name including hierarchy
+        self.full_name = None           # name including parent hierarchy
 
 
     def GetParent(self, 

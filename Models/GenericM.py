@@ -24,7 +24,7 @@ class Model():
     # class properties
     TableName = ""
     CollectionObject = ""
-    ElementTitle = "l'animal"
+    ElementTitle = ""
     CollectionTitle = ""
     Fields = []
 

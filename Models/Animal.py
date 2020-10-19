@@ -17,13 +17,13 @@ class Animal(GM.Model):
     CollectionTitle = "animaux"
     Fields = [
         {
-            "Name" : "id",
-            "Label" : "ID",
-            "Native" : True,
-            "Key" : "Primary",
-            "Add" : False,
-            "Update" : False,
-            "Print" : True
+            "Name" : "id",              # name of field in DB
+            "Label" : "ID",             # label of flied (how it is printed)
+            "Native" : True,            # native or calculated property
+            "Key" : "Primary",          # None, Primary or table name if foreign
+            "Add" : False,              # part of INSERT INTO query
+            "Update" : False,           # part of UPDATE query
+            "Print" : True              # printed in ...
         },
         {
             "Name" : "name",
